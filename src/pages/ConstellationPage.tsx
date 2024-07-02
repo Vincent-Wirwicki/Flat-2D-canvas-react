@@ -2,7 +2,7 @@ import Constellation from "../components/constellation/Constellation";
 
 const ConstellationPage = () => {
   return (
-    <section style={{ width: "80%", height: "50%" }}>
+    <section style={{ width: "70%", height: "60%", border: "solid 1px #fff" }}>
       <Constellation />
     </section>
   );

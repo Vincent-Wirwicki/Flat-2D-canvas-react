@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, RefObject } from "react";
+import useResizeReload from "../../hooks/useResizeReload";
 
 interface Coordinate {
   x: number;
@@ -123,24 +124,7 @@ const useTheWall = (
     };
   }, [canvasRef, mouse]);
 
-  useEffect(() => {
-    const onResize = () => {
-      if (!canvasRef.current) return;
-      const canvas = canvasRef.current;
-      const parentEl = canvas.parentElement;
-      if (!parentEl) return;
-      canvas.height = parentEl.offsetHeight;
-      canvas.width = parentEl.offsetWidth;
-      if (particulesRef.current.length) particulesRef.current = [];
-      initParticules();
-    };
-
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-    };
-  }, [initParticules, canvasRef]);
+  useResizeReload();
 
   useEffect(() => {
     const canvas = canvasRef.current;

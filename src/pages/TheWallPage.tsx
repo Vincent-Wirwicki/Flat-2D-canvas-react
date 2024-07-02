@@ -2,7 +2,7 @@ import TheWall from "../components/thewall/TheWall";
 
 const TheWallPage = () => {
   return (
-    <section style={{ width: "80%", height: "50%" }}>
+    <section style={{ width: "60%", height: "60%" }}>
       <TheWall />
     </section>
   );

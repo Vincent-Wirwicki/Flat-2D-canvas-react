@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, RefObject } from "react";
+import useResizeReload from "../../hooks/useResizeReload";
+// import useThrottle from "../../hooks/useThrottle";
 
 interface ParticuleType {
   radius: number;
@@ -17,40 +19,26 @@ const useConstellation = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   config: ConfigArgs
 ): void => {
-  //particules array
   const particulesArrayRef = useRef<ParticuleType[]>([]);
-
-  //requestanimationframe ref
   const rafRef = useRef<number>(0);
-
-  //config particules
-
-  // some issue with re render and radius idk why so it's const
-  //   const radius = r;
-
-  // randomize particule speed and pos
   const randomizePos = (radius: number, max: number) =>
     radius + Math.random() * (max - radius * 2);
-
   const randomizeSpeed = () => Math.random() * 1 - 0.6;
 
-  // initiliaze particule array
   const initParticules = useCallback(() => {
-    if (particulesArrayRef.current.length > 0) particulesArrayRef.current = [];
-    if (canvasRef.current) {
-      for (let i = 0; i < config.density; i++) {
-        particulesArrayRef.current.push({
-          radius: config.radius,
-          pos: {
-            x: randomizePos(config.radius, canvasRef.current.width),
-            y: randomizePos(config.radius, canvasRef.current.height),
-          },
-          speed: {
-            x: randomizeSpeed(),
-            y: randomizeSpeed(),
-          },
-        });
-      }
+    if (!canvasRef.current) return;
+    for (let i = 0; i < config.density; i++) {
+      particulesArrayRef.current.push({
+        radius: config.radius,
+        pos: {
+          x: randomizePos(config.radius, canvasRef.current.width),
+          y: randomizePos(config.radius, canvasRef.current.height),
+        },
+        speed: {
+          x: randomizeSpeed(),
+          y: randomizeSpeed(),
+        },
+      });
     }
   }, [canvasRef, config.density, config.radius]);
 
@@ -68,18 +56,17 @@ const useConstellation = (
   // update particules positions
   const update = useCallback(
     (ctx: CanvasRenderingContext2D, particules: ParticuleType[]) => {
-      if (canvasRef.current && particules.length > 0) {
-        for (let i = 0; i < particules.length; i++) {
-          const { pos, speed, radius } = particules[i];
-          pos.x += speed.x;
-          pos.y += speed.y;
-          //check if particule reach canvas limit
-          if (pos.x < radius || pos.x > canvasRef.current.width - radius)
-            speed.x *= -1;
-          if (pos.y < radius || pos.y > canvasRef.current.height - radius)
-            speed.y *= -1;
-          draw(ctx, particulesArrayRef.current[i]);
-        }
+      if (!canvasRef.current || !particules.length) return;
+      for (let i = 0; i < particules.length; i++) {
+        const { pos, speed, radius } = particules[i];
+        pos.x += speed.x;
+        pos.y += speed.y;
+        //check if particule reach canvas limit
+        if (pos.x < radius || pos.x > canvasRef.current.width - radius)
+          speed.x *= -1;
+        if (pos.y < radius || pos.y > canvasRef.current.height - radius)
+          speed.y *= -1;
+        draw(ctx, particulesArrayRef.current[i]);
       }
     },
     [particulesArrayRef, canvasRef, draw]
@@ -108,6 +95,8 @@ const useConstellation = (
     },
     [config.maxDist]
   );
+  // reload on resize
+  useResizeReload();
   //render part
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -120,8 +109,7 @@ const useConstellation = (
     canvas.height = parentEl.offsetHeight;
     canvas.width = parentEl.offsetWidth;
 
-    initParticules();
-
+    if (!particulesArrayRef.current.length) initParticules();
     const particules = particulesArrayRef.current;
     ctx.fillStyle = config.color;
     ctx.strokeStyle = config.color;
@@ -135,8 +123,6 @@ const useConstellation = (
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      //   if (particulesArrayRef.current.length > 0)
-      //     particulesArrayRef.current = [];
     };
   }, [canvasRef, config.color, initParticules, connect, update]);
 
