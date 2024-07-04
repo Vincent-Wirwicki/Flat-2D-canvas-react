@@ -23,6 +23,9 @@ const MainNav = () => {
       <Link className="link" to="/thewall">
         the wall
       </Link>
+      <Link className="link" to="/lab">
+        lab
+      </Link>
     </nav>
   );
 };

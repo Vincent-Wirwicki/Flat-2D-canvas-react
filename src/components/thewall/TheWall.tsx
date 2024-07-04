@@ -12,7 +12,7 @@ const TheWall = () => {
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <canvas className="canvas-fit" ref={canvasRef} />
+      <canvas className="canvas" ref={canvasRef} />
     </div>
   );
 };

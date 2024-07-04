@@ -1,16 +1,21 @@
-import { useRef, useState } from "react";
-import useConstellation from "./useConstellation";
+import { useRef } from "react";
+import useResizeReload from "../../hooks/useResizeReload";
+import useConstellation32Array from "./hooks/useConstellation32array";
+// import useConstellationClass from "./useConstellationClass";
 
 const Constellation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [config] = useState({
+  useResizeReload();
+  // useConstellationClass(canvasRef);
+  useConstellation32Array(canvasRef, {
     color: "#b91c1c",
     radius: 1,
     density: 200,
     maxDist: 80,
   });
-  useConstellation(canvasRef, config);
-  return <canvas ref={canvasRef}></canvas>;
+  return (
+    <canvas ref={canvasRef} style={{ height: "100%", width: "100%" }}></canvas>
+  );
 };
 
 export default Constellation;

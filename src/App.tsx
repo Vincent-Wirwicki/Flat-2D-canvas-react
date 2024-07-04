@@ -3,6 +3,7 @@ import Layout from "./layout/Layout";
 import HomePage from "./pages/HomePage";
 import TheWallPage from "./pages/TheWallPage";
 import ConstellationPage from "./pages/ConstellationPage";
+import LabPage from "./pages/LabPage";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -10,6 +11,7 @@ const App = () => {
       element: <Layout />,
       children: [
         { element: <HomePage />, path: "/" },
+        { element: <LabPage />, path: "/lab" },
         { element: <TheWallPage />, path: "/thewall" },
         { element: <ConstellationPage />, path: "/constellation" },
       ],

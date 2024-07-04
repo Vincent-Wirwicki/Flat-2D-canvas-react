@@ -1,6 +1,6 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-const FakeSphere = () => {
+const Lab = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const FakeSphere = () => {
       for (let i = 0; i < samples; i++) {
         const strides = i * 2;
         const y = 1 - (i / (samples - 1)) * 2; // y goes from 1 to -1
-        const radius = Math.sqrt(1 - y * y); // radius at y
+        const radius = Math.sqrt(1 - y * y * y * y); // radius at y
 
         const theta = phi * i; // golden angle increment
 
@@ -36,7 +36,11 @@ const FakeSphere = () => {
 
       return points;
     };
+    // hilbert
+    // Here, "F" means "draw forward", "+" means "turn left 90°", "-" means "turn right 90°" (see turtle graphics), and "A" and "B" are ignored during drawing.
 
+    // A → +F−F−F+ = l90 - F - r90 - F - r90 -F l90
+    // B → −AF+BFB+FA− = r90
     const drawPoints = (
       points: Float32Array,
       ctx: CanvasRenderingContext2D
@@ -66,13 +70,7 @@ const FakeSphere = () => {
     drawPoints(points, ctx);
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="canvas"
-      style={{ border: "1px solid #fff" }}
-    ></canvas>
-  );
+  return <canvas ref={canvasRef} style={{ border: "1px solid #fff" }}></canvas>;
 };
 
-export default FakeSphere;
+export default Lab;

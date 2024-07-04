@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, RefObject } from "react";
-import useResizeReload from "../../hooks/useResizeReload";
 // import useThrottle from "../../hooks/useThrottle";
 
 interface ParticuleType {
@@ -96,7 +95,6 @@ const useConstellation = (
     [config.maxDist]
   );
   // reload on resize
-  useResizeReload();
   //render part
   useEffect(() => {
     const canvas = canvasRef.current;
