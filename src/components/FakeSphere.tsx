@@ -62,7 +62,7 @@ const FakeSphere = () => {
       }
     };
 
-    const points = fibonacciSphere(4000);
+    const points = fibonacciSphere(1000);
     drawPoints(points, ctx);
   }, []);
 

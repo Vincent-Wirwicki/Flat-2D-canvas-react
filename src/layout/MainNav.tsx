@@ -1,7 +1,13 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const MainNav = () => {
   // const navPaths = [""]
+  const navPaths = [
+    { path: "/", title: "Constellation" },
+    { path: "/thewall", title: "The wall" },
+    { path: "/wavegif", title: "Wave gif" },
+    { path: "/lab", title: "lab" },
+  ];
   return (
     <nav>
       <h1
@@ -14,18 +20,11 @@ const MainNav = () => {
       >
         Flat
       </h1>
-      <Link className="link" to="/">
-        fake 3D{" "}
-      </Link>
-      <Link className="link" to="/constellation">
-        constellation
-      </Link>
-      <Link className="link" to="/thewall">
-        the wall
-      </Link>
-      <Link className="link" to="/lab">
-        lab
-      </Link>
+      {navPaths.map(({ path, title }, i) => (
+        <NavLink key={path + i} className="link" to={path}>
+          {title}
+        </NavLink>
+      ))}
     </nav>
   );
 };

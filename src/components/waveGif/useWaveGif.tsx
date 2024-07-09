@@ -1,8 +1,6 @@
-import { useEffect, useRef } from "react";
-import useResizeReload from "../../hooks/useResizeReload";
+import { RefObject, useEffect, useRef } from "react";
 
-const Lab = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const useWaveGif = (canvasRef: RefObject<HTMLCanvasElement>) => {
   const rafRef = useRef<number | null>(0);
 
   useEffect(() => {
@@ -16,8 +14,9 @@ const Lab = () => {
     canvas.width = parentEl.offsetWidth;
     ctx.strokeStyle = "#fff";
     ctx.fillStyle = "#000";
-    // code  from here https://bleuje.com/tutorial2/
-    const numFrames = 60;
+
+    //adapted from here https://bleuje.com/tutorial2/
+    const totalFrame = 60;
     let frameCount = 0;
 
     //lerp and constrain value some sort of clamp
@@ -34,14 +33,14 @@ const Lab = () => {
       const y = y2 - y1;
       return Math.sqrt(x * x + y * y);
     };
-
+    //sin interval of [-1,1] map to [2,8]
     const period = (p: number) => map(Math.sin(2 * Math.PI * p), -1, 1, 2, 8);
 
     const offset = (x: number, y: number) =>
       0.01 * dist(x, y, canvas.width / 2, canvas.height / 2);
 
     const draw = () => {
-      const loop = frameCount / numFrames;
+      const loop = frameCount / totalFrame;
       //w = wave radius
       const w = 80;
       for (let i = 0; i < w; i++) {
@@ -62,7 +61,7 @@ const Lab = () => {
     const render = () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       draw();
-      if (frameCount === numFrames) frameCount = 0;
+      if (frameCount === totalFrame) frameCount = 0;
       frameCount++;
       rafRef.current = requestAnimationFrame(render);
     };
@@ -73,9 +72,7 @@ const Lab = () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     };
-  }, []);
-  useResizeReload();
-  return <canvas ref={canvasRef}></canvas>;
+  }, [canvasRef]);
 };
 
-export default Lab;
+export default useWaveGif;
